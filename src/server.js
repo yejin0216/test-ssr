@@ -5,6 +5,7 @@ import { renderToString } from 'react-dom/server';
 import React from 'react';
 import App from './App';
 import * as url from 'url';
+import { ServerStyleSheet } from 'styled-components';
 
 const app = express();
 
@@ -19,13 +20,16 @@ app.get('/favicon.ico', (req, res) => res.sendStatus(204)); // favicon.ico 처�
 app.get('*', (req, res) => {
   const parseUrl = url.parse(req.url, true);
   const initPage = parseUrl.pathname ? parseUrl.pathname.substring(1) : 'home';
-
-  const renderString = renderToString(<App initPage={initPage} />); // renderToString 함수로 App 컴포넌트를 반환한다.
+  const sheet = new ServerStyleSheet(); // 스타일을 추출할 객체
+  const renderString = renderToString(
+    sheet.collectStyles(<App initPage={initPage} />),
+  ); // renderToString 함수로 App 컴포넌트를 반환한다.
+  const styles = sheet.getStyleTags();
   const initialData = { initPage };
   const result = html
     .replace("<div id='root'></div>", `<div id="root>${renderString}</div>`)
-    .replace('__DATA_FROM_SERVER__', JSON.stringify(initialData));
-
+    .replace('__DATA_FROM_SERVER__', JSON.stringify(initialData))
+    .replace('__STYLE_FROM_SERVER__', styles);
   res.send(result);
 });
 
