@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build-server": "babel src --out-dir dist-server --config-file ./.babelrc.server.js",
-    "both-build": "npm run build-server && webpack",
-    "start": "node dist-server/server.js"
+    "build": "webpack",
+    "start": "node dist/server.bundle.js"
   },
   "repository": {
     "type": "git",
@@ -33,8 +32,10 @@
     "babel-loader": "^8.2.5",
     "clean-webpack-plugin": "^4.0.0",
     "express": "^4.18.1",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
     "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2"
+    "webpack-cli": "^4.9.2",
+    "webpack-node-externals": "^3.0.0"
   }
 }
